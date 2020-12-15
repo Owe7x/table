@@ -95,11 +95,10 @@
                     md="4"
                   >
                     <v-text-field
-                    v-for="block in editedItem" :key="block"
-                      v-model="block"
-                      :label="item.text"
+                    v-for="(block, i) in editedItem" :key="i"
+
+                    :label="block.text"
                     >
-                    {{block}}
                     </v-text-field>
                   </v-col>
 
@@ -254,11 +253,11 @@
       },
       editedItem: [
         {name: ''},
-        {calories: 0},
-        {fat: 0},
-        {carbs: 0},
-        {protein: 0},
-        {new: 0}
+        {calories: ''},
+        {fat: ''},
+        {carbs: ''},
+        {protein: ''},
+        {new: ''}
       ]
       
 /*       {
