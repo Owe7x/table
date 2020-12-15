@@ -76,7 +76,7 @@
                   >
                     <v-text-field
                       v-model="editedItem.carbs"
-                      label="Carbs (g)"
+                      label="Carbs"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -85,10 +85,24 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
+                      v-model="editedItem.new"
+                      label="New"
                     ></v-text-field>
                   </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                    v-for="block in editedItem" :key="block"
+                      v-model="block"
+                      :label="item.text"
+                    >
+                    {{block}}
+                    </v-text-field>
+                  </v-col>
+
                 </v-row>
               </v-container>
             </v-card-text>
@@ -155,6 +169,7 @@
                       label="Value"
                     ></v-text-field>
                   </v-col>
+                  
                 </v-row>
               </v-container>
             </v-card-text>
@@ -229,20 +244,31 @@
         name: '',
         value: ''
       },
-      editedItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-      },
       defaultItem: {
         name: '',
         calories: 0,
         fat: 0,
         carbs: 0,
         protein: 0,
+
       },
+      editedItem: [
+        {name: ''},
+        {calories: 0},
+        {fat: 0},
+        {carbs: 0},
+        {protein: 0},
+        {new: 0}
+      ]
+      
+/*       {
+        name: '',
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+        new: 0
+      } */
     }),
 
     computed: {
@@ -266,6 +292,7 @@
     created () {
       this.initializeRow()
       this.initializeColumn()
+      console.log(this.editedItem);
     },
 
     methods: {
@@ -277,6 +304,7 @@
             fat: 6.0,
             carbs: 24,
             protein: 4.0,
+            new: 12
           },
           {
             name: 'Ice cream sandwich',
@@ -363,8 +391,8 @@
           { text: 'Protein (g)', 
             value: 'protein' 
           },
-          { text: 'Protein (g)', 
-            value: 'protein' 
+          { text: 'New Elem', 
+            value: 'new' 
           },
           { text: 'Actions', 
             value: 'actions', 
@@ -432,8 +460,11 @@
           Object.assign(this.headers[this.editedIndex], this.editedColumn)
         } else {
           this.headers.splice(this.headers.length -1, 0, this.editedColumn)
+          this.editedItem.push(this.editedColumn)
+
         }
-        console.log(this.headers);
+        console.log('Шапка', this.headers);
+        console.log('Итемс', this.editedItem);
         this.close2()
       },
     }
