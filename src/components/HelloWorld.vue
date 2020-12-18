@@ -69,36 +69,19 @@
                       label="Fat (g)"
                     ></v-text-field>
                   </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.new"
-                      label="New"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                    v-for="(block, i) in editedItem" :key="i"
 
-                    :label="block.text"
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                    v-for="(value, name, i) in item" :key="i"
+                    :v-model="value"
+                    :label="name"
                     >
+                    {{name}}
+                    {{value}}
                     </v-text-field>
                   </v-col>
 
@@ -244,22 +227,26 @@
         value: ''
       },
       defaultItem: {
-        name: '',
+        name: 'name',
         calories: 0,
         fat: 0,
         carbs: 0,
         protein: 0,
 
       },
-      editedItem: [
-        {name: ''},
-        {calories: ''},
-        {fat: ''},
-        {carbs: ''},
-        {protein: ''},
-        {new: ''}
+      editedItem: {
+        name: '',
+        calories: '',
+        fat: '',
+        carbs: '',
+        protein: '',
+      },
+      item: [
+        { text: 'text1'},
+        { text: 'text2'},
+        { text: 'text3'},
       ]
-      
+
 /*       {
         name: '',
         calories: 0,
@@ -292,6 +279,8 @@
       this.initializeRow()
       this.initializeColumn()
       console.log(this.editedItem);
+      console.log(this.headers);
+      console.log(this.item);
     },
 
     methods: {
@@ -390,9 +379,6 @@
           { text: 'Protein (g)', 
             value: 'protein' 
           },
-          { text: 'New Elem', 
-            value: 'new' 
-          },
           { text: 'Actions', 
             value: 'actions', 
             sortable: false 
@@ -459,11 +445,11 @@
           Object.assign(this.headers[this.editedIndex], this.editedColumn)
         } else {
           this.headers.splice(this.headers.length -1, 0, this.editedColumn)
-          this.editedItem.push(this.editedColumn)
+          this.item.push(this.editedColumn)
 
         }
         console.log('Шапка', this.headers);
-        console.log('Итемс', this.editedItem);
+        console.log('Итемс', this.item);
         this.close2()
       },
     }
