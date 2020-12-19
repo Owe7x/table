@@ -39,14 +39,14 @@
 
     <v-main>
 
-      <v-table/>
+
       <v-table2/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import vTable from './components/v-table'
+
 import vTable2 from './components/v-table2'
 
 export default {
@@ -54,7 +54,7 @@ export default {
 
   components: {
     vTable2,
-    vTable
+
   },
 
   data: () => ({
