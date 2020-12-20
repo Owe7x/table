@@ -23,15 +23,29 @@
                 <table>
                     <thead>
                         <tr>
-                            <th v-for="(name, index) in header" :key="index">
-                                {{name.name}} 
-                                <!-- <span v-for="(name,index) in name" :key="index">
-                                    {{name}}
-                                </span> -->
-                                <button class="b20" v-if="header.length > 1" v-on:click="fDeleteColumn(index)" title="Удалить строку">X</button>
+                            <th v-for="(name, index) in header" :key="index" > 
+                                {{name.name}}
+                                
+                                <div class="header-modal" v-show="dialog" >
+                                    <label for="" >
+                                    Value   <select  v-model="name.value" >
+                                                <option >int</option>
+                                                <option >varchar</option>
+                                                <option >date</option>
+                                                <option >datetime</option>
+                                            </select>
+                                    </label>
+                                </div>
+                                
+                                <button class="b20" v-if="header.length > 1" v-on:click="fDeleteColumn(index)" title="Удалить колонку">X</button>
                             </th>
-                            <th>X</th>
+                            <th
+                            >
+                            <button @click="dialog = !dialog" title="Редактировать value">Ред.</button>
+                            X
+                            </th>
                         </tr>
+                        
                     </thead>
                     <tbody>
                 <!-- Заполнение таблицы -->
@@ -54,7 +68,7 @@
                             Name<input type="text" v-model="addTh" /> 
                         </label>
                         <label for="">
-                            Value   <select  v-model="innerValue" >
+                            Value   <select  v-model="thData.value" >
                                         <option >int</option>
                                         <option >varchar</option>
                                         <option >date</option>
@@ -70,9 +84,11 @@
 </template>
 
 <script>
+
 export default {
     data() {
         return {
+            dialog: false,
             show: true,
             header: [
                 {name: 'category_id', value: ''},
@@ -112,7 +128,7 @@ export default {
         Object.assign(this.thData, { i: this.addTh });
         },
         addColumn: function () {
-            this.header.push({name: this.addTh, value: this.innerValue})
+            this.header.push({name: this.addTh, value: this.thData.value})
             this.thData.push({name: this.addTh, value: ''})
 
             console.log('Элементов в строке', this.thData);
@@ -133,6 +149,7 @@ export default {
         this.header.splice(index, 1);
         this.thData.splice(index, 1)
         },
+
     },
 };
 </script>
@@ -148,6 +165,13 @@ table {
 }
 thead {
     width: 100%;
+    position: relative;
+}
+.header-modal {
+    position: absolute;
+    top: 14%;
+    background: #308090;
+    padding: 5px 15px;
 }
 #lvTable {
     width: 630px;
