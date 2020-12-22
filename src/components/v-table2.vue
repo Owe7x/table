@@ -1,9 +1,22 @@
 <template>
     <div>
         <div id="lvTable">
-            <button class="button_table" @click="show = !show">TABLE</button>
-            <button class="button_table" @click="show = !show">DDL</button>
-            <div class="ddl" v-if="!show">
+            <div class="header-button">
+                <div class="toggle">
+                    <button class="button_table" @click="toggleButton()">TABLE</button>
+                    <button class="button_table" @click="toggleButton()">DDL</button>
+                </div>
+                <button class="button_table" @click="dialog = !dialog" title="Редактировать value">Редактировать</button>
+            </div>
+
+            <div class="ddl" v-if="show">
+                <div class="generate-table">
+                    <span>CREATE TABLE categories</span>
+                    <br>
+                    ( <span v-for="(item, index) in header" :key="index">
+                        {{item.name }} {{item.value}} NOT NULL, <br>
+                        </span> );
+                </div>
                 <div class="generate" v-for="(item, index) in tbData" :key="index">
                     <span>INSER INTO categories</span>
                     <br>
@@ -23,12 +36,13 @@
                 <table>
                     <thead>
                         <tr>
-                            <th v-for="(name, index) in header" :key="index" > 
-                                {{name.name}}
-                                
+                            <th style="text-align: left" v-for="(name, index) in header" :key="index" > 
+                                <div class="th">
+                                    {{name.name}}
+                                </div>
                                 <div class="header-modal" v-show="dialog" >
                                     <label for="" >
-                                    Value   <select  v-model="name.value" >
+                                    Value:   <select  v-model="name.value" >
                                                 <option >int</option>
                                                 <option >varchar</option>
                                                 <option >date</option>
@@ -36,12 +50,15 @@
                                             </select>
                                     </label>
                                 </div>
-                                
-                                <button class="b20" v-if="header.length > 1" v-on:click="fDeleteColumn(index)" title="Удалить колонку">X</button>
+                                <div class="header-modal" v-show="dialog" >
+                                    <label >
+                                    Name: 
+                                    </label>
+                                    <input type="text" v-model="name.name">
+                                </div>
                             </th>
                             <th
                             >
-                            <button @click="dialog = !dialog" title="Редактировать value">Ред.</button>
                             X
                             </th>
                         </tr>
@@ -55,7 +72,7 @@
 
                                 <input type="text" v-model="entry[index ]" :key="index">
                             </td>
-                            <td><button class="b20" v-if="tbData.length > 1" v-on:click="fDeleteRow(index)" title="Удалить строку">DELETE</button></td>
+                            <td><button class="b20" v-if="tbData.length > 0" v-on:click="fDeleteRow(index)" title="Удалить строку">DELETE</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -85,6 +102,7 @@
 
 <script>
 
+
 export default {
     data() {
         return {
@@ -93,10 +111,6 @@ export default {
             header: [
                 {name: 'category_id', value: ''},
                 {name: 'category_name', value: ''},
-                {name: '3', value: ''},
-                {name: '4', value: ''},
-                {name: '5', value: ''},
-                {name: '6', value: ''}
             ],
             tbFullPrice: 0,
             tbData: [
@@ -106,22 +120,14 @@ export default {
             ],
             thData: [
                 {name: '1', value: ''},
-                {name: '2', value: ''},
-                {name: '3', value: ''},
-                {name: '4', value: ''},
-                {name: '5', value: ''},
             ],
             addTh: "",
-            newTbData: [
-                {}
-            ],
             counter: 0,
             innerValue: ''
         };
     },
     created() {
-        console.log(this.thData);
-        console.log(this.header);
+        console.log('Элементов в строке',this.thData);
     },
     methods: {
         addThData: function () {
@@ -133,6 +139,7 @@ export default {
 
             console.log('Элементов в строке', this.thData);
             console.log('Элементов в хэдере', this.header);
+            console.log('Строк', this.tbData);
             
         },
         fAddNewRow: function () {
@@ -146,20 +153,24 @@ export default {
         },
         fDeleteColumn: function (index) {
         // Удалить строку с номером index из таблицы
-        this.header.splice(index, 1);
-        this.thData.splice(index, 1)
+        this.header.splice(index, 1)
         },
-
+        toggleButton: function() {
+            this.show = !this.show
+        }
     },
 };
 </script>
 
 <style lang="scss" scoped>
+* {
+    font-size: 12px;
+}
 
 table {
     width: 630px;
     margin: auto;
-    border: 2px solid #308090;
+    border: 1px solid #e6ecf6;
     border-radius: 3px;
     background-color: #fff;
 }
@@ -167,27 +178,61 @@ thead {
     width: 100%;
     position: relative;
 }
+.th {
+    padding: 5px 15px
+}
 .header-modal {
-    position: absolute;
-    top: 14%;
-    background: #308090;
+    background: #e6ecf6;
     padding: 5px 15px;
+    select {
+        border: 1px solid #f3f8f9
+    }
+    input { 
+        border: 1px solid  #f3f8f9;
+    }
 }
 #lvTable {
     width: 630px;
     margin: 20px 0px 0px 20px;
 }
+.generate-table {
+    padding: 10px;
+    background-color: #e6ecf6;
+    border-left: 3px solid #478bf8;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.generate { 
+    padding: 10px;
+    background-color: #e6ecf6;
+    border-left: 3px solid #478bf8;
+}
+.header-button {
+    display: flex;
+
+}
 .button_table {
     padding: 5px 10px;
-    border: 2px solid #308090;
+    border: 2px solid #e6ecf6;
+    
     margin-bottom: 2px;
     margin-right: 2px;
+    &:hover {
+        border: 2px solid #9fa3aa;
+        background: #e6ecf6;
+    }
+    &:focus {
+        outline: none
+    }
+}
+.b20{ 
+    margin-left: 10px;
 }
 .footer {
     margin-top: 20px;
     display: flex;
     &_block {
-        border: 2px solid #308090;
+        border: 2px solid #e6ecf6;
         display: flex;
         align-items: center;
         margin-right: 20px;
@@ -198,14 +243,21 @@ thead {
             width: 100px;
             margin-left: 10px;
             margin-right: 20px;
-            border: 2px solid  #308090;
+            border: 2px solid  #e6ecf6;
             border-radius: 10px;
         }
         button {
-            color: white;
-            background-color: #308090;
+            color: rgb(0, 0, 0);
+            background-color: #e6ecf6;
             padding: 5px 10px;
             border: 1px solid white;
+            &:hover {
+                border: 2px solid #9fa3aa;
+                background: #e6ecf6;
+            }
+            &:focus {
+                outline: none
+            }
         }
     }
 }
@@ -214,12 +266,14 @@ td {
   /* Общие параметры заголовка и строк */
     min-width: 50px;
     padding: 10px 0px;
+    border: 1px solid #e6ecf6;
 }
 th {
     min-width: 140px;
-    background-color: #308090;
-    color: #ffffff;
+    background-color:#e7ecf5;
+    color: #000000;
     cursor: default;
+    
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -228,12 +282,12 @@ th {
 input {
     font-family: Helvetica Neue, Arial, sans-serif;
     font-size: 14px;
-    color: #106070;
+    color: #000000;
 
     width: 100%;
 }
 td {
     background-color: #f3f8f9;
-    border: 1px solid black;
+    padding: 10px 5px;
 }
 </style>
