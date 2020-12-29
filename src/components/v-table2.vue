@@ -9,7 +9,7 @@
                 <button class="button_table" @click="dialog = !dialog" title="Редактировать value">Редактировать</button>
             </div>
 
-            <div class="ddl" v-if="show">
+            <div class="ddl" v-if="!show">
                 <div class="generate-table">
                     <span>CREATE TABLE categories</span>
                     <br>

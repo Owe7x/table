@@ -41,6 +41,7 @@
 
 
       <v-table2/>
+
     </v-main>
   </v-app>
 </template>
@@ -51,14 +52,26 @@ import vTable2 from './components/v-table2'
 
 export default {
   name: 'App',
-
+  data() {
+    return {
+      name: ''
+    }
+  },
   components: {
     vTable2,
 
   },
 
-  data: () => ({
-    //
-  }),
+
 };
 </script>
+
+<style  scoped>
+  .title {
+    width: 600px;
+    margin: 0 auto;
+  }
+  input {
+      border: 1px solid black
+    }
+</style>
