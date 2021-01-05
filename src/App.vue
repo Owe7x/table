@@ -40,7 +40,7 @@
     <v-main>
 
 
-      <v-table2/>
+      <vTable2/>
 
     </v-main>
   </v-app>
@@ -48,7 +48,7 @@
 
 <script>
 
-import vTable2 from './components/v-table2'
+import vTable2 from './components/v-table'
 
 export default {
   name: 'App',
