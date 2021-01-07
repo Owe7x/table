@@ -1,6 +1,57 @@
 <template>
   <div id="app">
-    <vue-table
+    <div class="header-button">
+        <div class="toggle">
+            <button class="button_table" @click="Table()">TABLE</button>
+            <button class="button_table" @click="Ddl()">DDL</button>
+            <button class="button_table" @click="Change()" title="Редактировать value">Редактировать</button>
+        </div>
+    </div>
+    <div class="header-change" >
+      <div class="header-modal" v-show="change" v-for="(item, index) in headers" :key="index">
+          <label >
+          Name: 
+          </label>
+          <input type="text" v-model="item.headerName">
+          <label for="" >
+          Value:   <select  v-model="item.headerType" >
+                      <option >int</option>
+                      <option >varchar</option>
+                      <option >date</option>
+                      <option >datetime</option>
+                  </select>
+          </label>
+      </div>
+
+    </div>
+    <div class="ddl"  v-show="ddl">
+      <div class="generate-table">
+          <span>CREATE TABLE categories</span>
+          <br>
+          (<span v-for="(items, index) in headers" :key="index">
+              {{items.headerName}} {{items.headerType}} NOT NULL, <br>
+          </span>)
+          
+      </div>
+      <div class="generate" v-for="(item, index) in products" :key="index">
+          <span>INSER INTO categories</span>
+          <br>
+          (<span v-for="(items, index) in headers" :key="index">
+                  {{items.headerName}},
+              </span> );
+          <br>
+          VALUES
+          <br>
+          <div>
+              ({{index+1}} <span v-for="(item, index) in item" :key="index">
+                        {{item.value}},
+                    </span>);
+          </div>
+      </div>
+    </div>
+    
+    <div class="table" v-show="table">
+      <vue-table
       :tbody-data="products"
       :headers="headers"
       :custom-options="customOptions"
@@ -17,23 +68,32 @@
       v-on:tbody-submenu-click-change-value="changeValueTbody"
       v-on:thead-submenu-click-change-color="changeColorThead"
       v-on:thead-submenu-click-change-value="changeValueThead"
-      v-on:thead-td-sort="sortProduct">
-    <div slot="header">
-      Specific Header
-    </div>
+      v-on:thead-td-sort="sortProduct"
+      >
     <div slot="loader">
       Loader
     </div>
     </vue-table>
-
     <button @click="show = !show" class="button">New Column</button>
     <button @click="AddRow()" class="button">New Row</button>
     <div class="modal-show" v-if="show">
       <div @click="show = !show" class="modal-close">X</div>
       <div class="show-input">Name <input v-model="headerName"></div>
       <div class="show-input">Key <input v-model="headerKey"></div>
+      <div class="show-input">Type:  <label for="" >
+          <select  v-model="headerType" >
+                      <option >int</option>
+                      <option >varchar</option>
+                      <option >date</option>
+                      <option >datetime</option>
+                  </select>
+          </label></div>
       <button @click="AddColumn(); show = !show" class="show-button">New Column</button>
     </div>
+    </div>
+    
+
+
   </div>
 </template>
 
@@ -45,7 +105,11 @@ export default {
   name: 'app',
   data() {
     return {
+      table: true,
+      ddl: false,
+      change: false,
       headerName: "",
+      headerType: "",
       headerKey: "",
       show: false,
       customOptions: {
@@ -162,8 +226,8 @@ export default {
           headerName: 'A',
           headerKey: 'a',
           style: {
-            width: '200px',
-            minWidth: '200px',
+            width: '100px',
+            minWidth: '100px',
             color: '#000',
           },
         },
@@ -171,8 +235,8 @@ export default {
           headerName: 'B',
           headerKey: 'b',
           style: {
-            width: '200px',
-            minWidth: '200px',
+            width: '100px',
+            minWidth: '100px',
             color: '#000',
           },
         },
@@ -180,8 +244,8 @@ export default {
           headerName: 'C',
           headerKey: 'c',
           style: {
-            width: '200px',
-            minWidth: '200px',
+            width: '100px',
+            minWidth: '100px',
             color: '#000',
           },
         },
@@ -189,8 +253,8 @@ export default {
           headerName: 'D',
           headerKey: 'd',
           style: {
-            width: '200px',
-            minWidth: '200px',
+            width: '100px',
+            minWidth: '100px',
             color: '#000',
           },
         },
@@ -198,8 +262,8 @@ export default {
           headerName: 'E',
           headerKey: 'e',
           style: {
-            width: '200px',
-            minWidth: '200px',
+            width: '100px',
+            minWidth: '100px',
             color: '#000',
           },
         },
@@ -207,8 +271,8 @@ export default {
           headerName: 'F',
           headerKey: 'f',
           style: {
-            width: '200px',
-            minWidth: '200px',
+            width: '100px',
+            minWidth: '100px',
             color: '#000',
           },
         },
@@ -216,8 +280,8 @@ export default {
           headerName: 'G',
           headerKey: 'g',
           style: {
-            width: '200px',
-            minWidth: '200px',
+            width: '100px',
+            minWidth: '100px',
             color: '#000',
           },
         },
@@ -298,8 +362,8 @@ export default {
             handleSearch: true,
             selectOptions: [
               {
-                value: 1980,
-                label: 1980,
+                value: '1980',
+                label: '1980',
               },
               {
                 value: 1981,
@@ -354,15 +418,16 @@ export default {
       this.products[rowIndex][header].value = 'T-shirt';
     },
     changeValueThead(event, entry, colIndex) {
-      this.headers[colIndex].headerName = 'T-shirt';
+      this.headers[colIndex].headerName = this.headerName;
     },
     AddColumn() {
       this.headers.push({
           headerName: this.headerName,
           headerKey: this.headerKey,
+          headerType: this.headerType,
           style: {
-            width: '200px',
-            minWidth: '200px',
+            width: '100px',
+            minWidth: '100px',
             color: '#000',
           },
       })
@@ -468,7 +533,27 @@ export default {
             active: false,
           },
         })
+    },
+    Table() {
+      this.table = true
+      this.ddl = false
+      this.change = false
+    },
+    Ddl() {
+      this.table = false
+      this.ddl = true
+      this.change = false
+    },
+    Change() {
+      if(this.ddl) {
+        this.change = false
+      } else if (this.change) {
+        this.change = false
+      } else {
+        this.change = true
+      }
     }
+
   },
 };
 </script>
@@ -527,6 +612,47 @@ export default {
     border: 1px solid black;
     margin-left: 5px;
   }
-  
+}
+.generate-table {
+    padding: 10px;
+    background-color: #e6ecf6;
+    border-left: 3px solid #478bf8;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.generate { 
+    padding: 10px;
+    background-color: #e6ecf6;
+    border-left: 3px solid #478bf8;
+}
+.button_table {
+    padding: 5px 10px;
+    border: 2px solid #e6ecf6;
+    margin-bottom: 2px;
+    margin-right: 2px;
+    &:hover {
+        border: 2px solid #9fa3aa;
+        background: #e6ecf6;
+    }
+    &:focus {
+        outline: none
+    }
+}
+.header-change {
+  display: flex;
+  margin-bottom: 10px;
+  margin-left: 28px;
+}
+.header-modal { 
+  width: 99px;
+  min-width: 99px;
+  color: #000;
+  background-color: #e6ecf6;
+  margin-right: 1px;
+  padding: 5px;
+  font-size: 12px;
+  input {
+    width: 50px;
+  }
 }
 </style>
