@@ -6,7 +6,31 @@
             <button class="button_table" @click="Ddl()">DDL</button>
         </div>
     </div>
+    <div class="ddl"  v-show="ddl">
+      <div class="generate-table">
+          <span>CREATE TABLE categories</span>
+          <br>
+          (<span v-for="(items, index) in headers" :key="index">
+              {{items.headerName}} {{items.headerType}} NOT NULL, <br>
+          </span>)
 
+      </div>
+      <div class="generate" v-for="(item, index) in products" :key="index">
+          <span>INSER INTO categories</span>
+          <br>
+          (<span v-for="(items, index) in headers" :key="index">
+                  {{items.headerName}},
+              </span> );
+          <br>
+          VALUES
+          <br>
+          <div>
+              ({{index+1}} <span v-for="(item, index) in item" :key="index">
+                        {{item.value}},
+                    </span>);
+          </div>
+      </div>
+    </div>
 
     
     <div class="table" v-show="table">
@@ -145,12 +169,6 @@ export default {
           disabled: ['a'],
         },
         {
-          type: 'button',
-          value: 'change name',
-          function: 'change-name',
-          disabled: ['a'],
-        },
-        {
           type: 'select',
           disabled: ['a'],
           subtitle: 'Select state:',
@@ -175,9 +193,9 @@ export default {
         },
         {
           type: 'button',
-          value: 'change value',
+          value: 'change name',
           function: 'change-value',
-          disabled: ['a', 'b'],
+          disabled: ['a'],
         },
       ],
       disableCells: ['a'],
