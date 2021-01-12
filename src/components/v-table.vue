@@ -4,51 +4,10 @@
         <div class="toggle">
             <button class="button_table" @click="Table()">TABLE</button>
             <button class="button_table" @click="Ddl()">DDL</button>
-            <button class="button_table" @click="Change()" title="Редактировать value">Редактировать</button>
         </div>
     </div>
-    <div class="header-change" >
-      <div class="header-modal" v-show="change" v-for="(item, index) in headers" :key="index">
-          <label >
-          Name: 
-          </label>
-          <input type="text" v-model="item.headerName">
-          <label for="" >
-          Value:   <select  v-model="item.headerType" >
-                      <option >int</option>
-                      <option >varchar</option>
-                      <option >date</option>
-                      <option >datetime</option>
-                  </select>
-          </label>
-      </div>
 
-    </div>
-    <div class="ddl"  v-show="ddl">
-      <div class="generate-table">
-          <span>CREATE TABLE categories</span>
-          <br>
-          (<span v-for="(items, index) in headers" :key="index">
-              {{items.headerName}} {{items.headerType}} NOT NULL, <br>
-          </span>)
-          
-      </div>
-      <div class="generate" v-for="(item, index) in products" :key="index">
-          <span>INSER INTO categories</span>
-          <br>
-          (<span v-for="(items, index) in headers" :key="index">
-                  {{items.headerName}},
-              </span> );
-          <br>
-          VALUES
-          <br>
-          <div>
-              ({{index+1}} <span v-for="(item, index) in item" :key="index">
-                        {{item.value}},
-                    </span>);
-          </div>
-      </div>
-    </div>
+
     
     <div class="table" v-show="table">
       <vue-table
@@ -68,14 +27,27 @@
       v-on:tbody-submenu-click-change-value="changeValueTbody"
       v-on:thead-submenu-click-change-color="changeColorThead"
       v-on:thead-submenu-click-change-value="changeValueThead"
+      v-on:thead-submenu-click-change-name="modalChangeShow"
       v-on:thead-td-sort="sortProduct"
       >
     <div slot="loader">
       Loader
     </div>
     </vue-table>
-    <button @click="show = !show" class="button">New Column</button>
-    <button @click="AddRow()" class="button">New Row</button>
+    <div class="footer-table">
+      <div class="headerName">
+        <label for="">
+          Header Name:
+        </label>
+        <input type="text" v-model="headerName">
+      </div>
+      <div class="button">
+        <button @click="show = !show" >New Column</button>
+      </div>
+      <div class="button">
+        <button @click="AddRow()" >New Row</button>
+      </div>
+    </div>
     <div class="modal-show" v-if="show">
       <div @click="show = !show" class="modal-close">X</div>
       <div class="show-input">Name <input v-model="headerName"></div>
@@ -112,6 +84,7 @@ export default {
       headerType: "",
       headerKey: "",
       show: false,
+      inputNameShow: false,
       customOptions: {
         tbodyIndex: true,
         sortHeader: true,
@@ -172,12 +145,18 @@ export default {
           disabled: ['a'],
         },
         {
+          type: 'button',
+          value: 'change name',
+          function: 'change-name',
+          disabled: ['a'],
+        },
+        {
           type: 'select',
           disabled: ['a'],
           subtitle: 'Select state:',
           selectOptions: [
             {
-              value: 'new-york',
+              input: 'new-york',
               label: 'new-york',
             },
             {
@@ -418,7 +397,11 @@ export default {
       this.products[rowIndex][header].value = 'T-shirt';
     },
     changeValueThead(event, entry, colIndex) {
-      this.headers[colIndex].headerName = this.headerName;
+      this.headers[colIndex].headerName = this.headerName
+      console.log(this.headerName)
+    },
+    modalChangeShow() {
+      this.inputNameShow = true
     },
     AddColumn() {
       this.headers.push({
@@ -571,7 +554,6 @@ export default {
   background: transparent;
 }
 .button {
-  margin-top: 10px;
   margin-right: 10px;
   background-color: #e7ecf5;
   padding: 10px 15px;
@@ -654,5 +636,20 @@ export default {
   input {
     width: 50px;
   }
+}
+.headerName {
+  background-color: #e7ecf5;
+  margin-right: 10px;
+  padding: 10px 15px;
+  input {
+    margin-left: 5px;
+    border: 1px solid white;
+  }
+}
+
+.footer-table {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
 }
 </style>
