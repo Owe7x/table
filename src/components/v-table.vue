@@ -6,6 +6,74 @@
             <button class="button_table" @click="Ddl()">DDL</button>
         </div>
     </div>
+    <div class="table" v-show="table">
+      <div class="header-change" >
+        <div class="header-modal" v-for="(item, index) in headers" :key="index">
+            <label >
+            Name: 
+            </label>
+            <input type="text" v-model="item.headerName">
+            <label for="" >
+            Value:   <select  v-model="item.headerType" >
+                        <option >int</option>
+                        <option >varchar</option>
+                        <option >date</option>
+                        <option >datetime</option>
+                    </select>
+            </label>
+        </div>
+      </div>
+    
+    <div class="table-main">
+        <vue-table
+        :tbody-data="products"
+        :headers="headers"
+        :custom-options="customOptions"
+        :style-wrap-vue-table="styleWrapVueTable"
+        :disable-cells="disableCells"
+        :disable-sort-thead="disableSortThead"
+        :loading="loading"
+        :parent-scroll-element="parentScrollElement"
+        :select-position="selectPosition"
+        :submenu-tbody="submenuTbody"
+        :submenu-thead="submenuThead"
+        v-on:tbody-change-data="changeData"
+        v-on:tbody-submenu-click-change-color="changeColorTbody"
+        v-on:tbody-submenu-click-change-value="changeValueTbody"
+        v-on:thead-submenu-click-change-color="changeColorThead"
+        v-on:thead-submenu-click-change-value="changeValueThead"
+        v-on:thead-submenu-click-change-name="modalChangeShow"
+        v-on:thead-td-sort="sortProduct"
+        >
+      <div slot="loader">
+        Loader
+      </div>
+      </vue-table>
+        <div class="footer-table">
+          <div class="button">
+            <button @click="show = !show" >New Column</button>
+          </div>
+          <div class="button">
+            <button @click="AddRow()" >New Row</button>
+          </div>
+        </div>
+        <div class="modal-show" v-if="show">
+          <div @click="show = !show" class="modal-close">X</div>
+          <div class="show-input">Name <input v-model="headerName"></div>
+          <div class="show-input">Key <input v-model="headerKey"></div>
+          <div class="show-input">Type:  <label for="" >
+              <select  v-model="headerType" >
+                          <option >int</option>
+                          <option >varchar</option>
+                          <option >date</option>
+                          <option >datetime</option>
+                      </select>
+              </label></div>
+          <button @click="AddColumn(); show = !show" class="show-button">New Column</button>
+        </div>
+      </div>
+    </div>
+
     <div class="ddl"  v-show="ddl">
       <div class="generate-table">
           <span>CREATE TABLE categories</span>
@@ -31,65 +99,6 @@
           </div>
       </div>
     </div>
-
-    
-    <div class="table" v-show="table">
-      <vue-table
-      :tbody-data="products"
-      :headers="headers"
-      :custom-options="customOptions"
-      :style-wrap-vue-table="styleWrapVueTable"
-      :disable-cells="disableCells"
-      :disable-sort-thead="disableSortThead"
-      :loading="loading"
-      :parent-scroll-element="parentScrollElement"
-      :select-position="selectPosition"
-      :submenu-tbody="submenuTbody"
-      :submenu-thead="submenuThead"
-      v-on:tbody-change-data="changeData"
-      v-on:tbody-submenu-click-change-color="changeColorTbody"
-      v-on:tbody-submenu-click-change-value="changeValueTbody"
-      v-on:thead-submenu-click-change-color="changeColorThead"
-      v-on:thead-submenu-click-change-value="changeValueThead"
-      v-on:thead-submenu-click-change-name="modalChangeShow"
-      v-on:thead-td-sort="sortProduct"
-      >
-    <div slot="loader">
-      Loader
-    </div>
-    </vue-table>
-    <div class="footer-table">
-      <div class="headerName">
-        <label for="">
-          Header Name:
-        </label>
-        <input type="text" v-model="headerName">
-      </div>
-      <div class="button">
-        <button @click="show = !show" >New Column</button>
-      </div>
-      <div class="button">
-        <button @click="AddRow()" >New Row</button>
-      </div>
-    </div>
-    <div class="modal-show" v-if="show">
-      <div @click="show = !show" class="modal-close">X</div>
-      <div class="show-input">Name <input v-model="headerName"></div>
-      <div class="show-input">Key <input v-model="headerKey"></div>
-      <div class="show-input">Type:  <label for="" >
-          <select  v-model="headerType" >
-                      <option >int</option>
-                      <option >varchar</option>
-                      <option >date</option>
-                      <option >datetime</option>
-                  </select>
-          </label></div>
-      <button @click="AddColumn(); show = !show" class="show-button">New Column</button>
-    </div>
-    </div>
-    
-
-
   </div>
 </template>
 
@@ -226,6 +235,7 @@ export default {
             width: '100px',
             minWidth: '100px',
             color: '#000',
+            opacity: '0'
           },
         },
         {
@@ -235,6 +245,7 @@ export default {
             width: '100px',
             minWidth: '100px',
             color: '#000',
+            opacity: '0'
           },
         },
         {
@@ -244,6 +255,7 @@ export default {
             width: '100px',
             minWidth: '100px',
             color: '#000',
+            opacity: '0'
           },
         },
         {
@@ -253,6 +265,7 @@ export default {
             width: '100px',
             minWidth: '100px',
             color: '#000',
+            opacity: '0'
           },
         },
         {
@@ -262,6 +275,7 @@ export default {
             width: '100px',
             minWidth: '100px',
             color: '#000',
+            opacity: '0'
           },
         },
         {
@@ -271,6 +285,7 @@ export default {
             width: '100px',
             minWidth: '100px',
             color: '#000',
+            opacity: '0'
           },
         },
         {
@@ -280,6 +295,7 @@ export default {
             width: '100px',
             minWidth: '100px',
             color: '#000',
+            opacity: '0'
           },
         },
       ],
@@ -430,6 +446,7 @@ export default {
             width: '100px',
             minWidth: '100px',
             color: '#000',
+            opacity: '0'
           },
       })
     },
@@ -638,11 +655,7 @@ export default {
         outline: none
     }
 }
-.header-change {
-  display: flex;
-  margin-bottom: 10px;
-  margin-left: 28px;
-}
+
 .header-modal { 
   width: 99px;
   min-width: 99px;
@@ -669,5 +682,19 @@ export default {
   display: flex;
   align-items: center;
   margin-top: 10px;
+}
+.table {
+  position: relative;
+  .header-change {
+    position: absolute;
+    top: 0;
+    display: flex;
+    margin-left: 29px;
+    z-index: 11;
+  }
+  .table-main {
+    position: absolute;
+    z-index: 10;
+  }
 }
 </style>
